@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>intento de currency</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+</script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery.js"></script>
+</head>
+
+<body>
+    <div id="clockdiv"></div>
+    <div id="convert"></div>
+
+    <script>
+        //////////// currency MXN to USD /////////////
+
+        // set endpoint and your access key
+        var totalprice=100; //aquí es poner que sea el número que sale en la tabla con el precio en MXN
+        var endpoint = 'live';
+        var access_key = 'e208a825539a0db2517710f6457203b5';
+
+        // get the most recent exchange rates via the "live" endpoint:
+        /*url: queryURL,
+          method: "GET"
+        }).then(function(response) {
+          $("#movie-view").text(JSON.stringify(response));
+        });*/
+        $.ajax({
+            url: 'http://apilayer.net/api/' + endpoint + '?access_key=' + access_key,
+            success: function (json) {
+
+                // exchange rata data is stored in json.quotes
+                //console.log(json.quotes.USDMXN);
+                var USDMXN=json.quotes.USDMXN;
+                console.log("tipo de cambio "+USDMXN);
+
+                // source currency is stored in json.source
+                //console.log(json.source);
+                var totalPriceUSD=Math.round(totalprice*USDMXN*100)/100;
+                console.log(totalPriceUSD);
+                 $("#convert").html(totalPriceUSD);
+            }
+        });
+        
+       
+
+        /*$.ajax({
+            url: 'https://free.currencyconverterapi.com/api/v6/convert?q=USD_MXN,MXN_USD&compact=ultra',
+            method: "GET"
+        }).then(function(json){
+            console.log(json);
+            var USDMXN=json.USD_MXN;
+            console.log("cambio"+USDMXN);
+        });*/
+        
+        //countdown
+        var deadline = 'october 31 2018'; //cambiar a data added
+        function getTimeRemaining(endtime){
+             var t = Date.parse(endtime) - Date.parse(new Date());
+            var seconds = Math.floor( (t/1000) % 60 );
+            var minutes = Math.floor( (t/1000/60) % 60 );
+            var hours = Math.floor( (t/(1000*60*60)) % 24 );
+            var days = Math.floor( t/(1000*60*60*24) );
+                return {
+                    'total': t,
+                    'days': days,
+                    'hours': hours,
+                    'minutes': minutes,
+                    'seconds': seconds
+                };
+}
+
+        function initializeClock(id, endtime){
+        var clock = document.getElementById(id);
+        var timeinterval = setInterval(function(){
+            var t = getTimeRemaining(endtime);
+            clock.innerHTML = 'days: ' + t.days + '<br>' +
+                            'hours: '+ t.hours + '<br>' +
+                            'minutes: ' + t.minutes + '<br>';
+            if(t.total<=0){
+            clearInterval(timeinterval);
+            }
+        },1000);
+        }
+
+        initializeClock('clockdiv', deadline);
+
+    //fixer.io
+   //accesskey="da4ef7667001817205bad991be2879d7";
+
+
+    </script>
+
+
+
+   
+</body>
+
+</html>
